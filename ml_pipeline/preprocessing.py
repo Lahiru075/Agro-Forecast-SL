@@ -23,3 +23,13 @@ def clean_raw_data(df: pd.DataFrame) -> pd.DataFrame:
 
 if __name__ == "__main__":
     print("Preprocessing module ready.")
+
+
+def temporal_train_test_split(df: pd.DataFrame):
+    """Split dataset temporally based on Year to prevent data leakage."""
+    train = df[df['Year'] <= 2017]
+    val = df[(df['Year'] >= 2018) & (df['Year'] <= 2020)]
+    test = df[df['Year'] >= 2021]
+    
+    print(f"Train set: {train.shape}, Validation set: {val.shape}, Test set: {test.shape}")
+    return train, val, test
