@@ -19,14 +19,3 @@ def add_features(df: pd.DataFrame) -> pd.DataFrame:
     df['Production_Lag_1Year'] = df['Production_Lag_1Year'].fillna(df['Production'].median())
     
     return df
-
-
-
-def temporal_train_test_split(df: pd.DataFrame):
-    """Split dataset temporally based on Year to prevent data leakage."""
-    train = df[df['Year'] <= 2017]
-    val = df[(df['Year'] >= 2018) & (df['Year'] <= 2020)]
-    test = df[df['Year'] >= 2021]
-    
-    print(f"Train set: {train.shape}, Validation set: {val.shape}, Test set: {test.shape}")
-    return train, val, test
