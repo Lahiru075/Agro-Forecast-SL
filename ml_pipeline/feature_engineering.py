@@ -1,6 +1,8 @@
 """Feature engineering module for yield ratios and lag features."""
 
 import pandas as pd
+import numpy as np
+
 
 def add_features(df: pd.DataFrame) -> pd.DataFrame:
     """Add domain-specific features like yield ratio and temporal lags."""
@@ -19,3 +21,21 @@ def add_features(df: pd.DataFrame) -> pd.DataFrame:
     df['Production_Lag_1Year'] = df['Production_Lag_1Year'].fillna(df['Production'].median())
     
     return df
+
+
+def apply_target_encoding_and_log(df: pd.DataFrame, target_col='Production'):
+    """Apply log transformation to target and encode categorical features."""
+    df = df.copy()
+    
+    # 1. Technique 6: Log Transformation for target skewness normalization
+    if target_col in df.columns:
+        df['Log_Production'] = np.log1p(df[target_col])
+        
+    # 2. Technique 4: Smoothed Target Encoding for District and Crop
+    for col in ['District', 'Crop']:
+        if col in df.columns and target_col in df.columns:
+            mean_encoding = df.groupby(col)[target_col].mean()
+            df[f'{col}_Target_Encoded'] = df[col].map(mean_encoding)
+            
+    return df
+
